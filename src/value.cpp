@@ -44,13 +44,17 @@ Value Value::public_send(Env *env, SymbolObject *name, Args args, Block *block) 
         if (args.argc > 0 && args[0].is_fast_integer())
             args[0].guard();
         auto synthesized = IntegerObject { m_integer };
-        return synthesized.public_send(env, name, args, block);
+        auto wrapper = Value { &synthesized };
+        wrapper.guard();
+        return wrapper.public_send(env, name, args, block);
     }
     if (m_type == Type::Double && FloatObject::optimized_method(name)) {
         if (args.argc > 0 && args[0].is_fast_float())
             args[0].guard();
         auto synthesized = FloatObject { m_double };
-        return synthesized.public_send(env, name, args, block);
+        auto wrapper = Value { &synthesized };
+        wrapper.guard();
+        return wrapper.public_send(env, name, args, block);
     }
 
     return object()->public_send(env, name, args, block);
@@ -62,13 +66,17 @@ Value Value::send(Env *env, SymbolObject *name, Args args, Block *block) {
         if (args.argc > 0 && args[0].is_fast_integer())
             args[0].guard();
         auto synthesized = IntegerObject { m_integer };
-        return synthesized.send(env, name, args, block);
+        auto wrapper = Value { &synthesized };
+        wrapper.guard();
+        return wrapper.send(env, name, args, block);
     }
     if (m_type == Type::Double && FloatObject::optimized_method(name)) {
         if (args.argc > 0 && args[0].is_fast_float())
             args[0].guard();
         auto synthesized = FloatObject { m_double };
-        return synthesized.send(env, name, args, block);
+        auto wrapper = Value { &synthesized };
+        wrapper.guard();
+        return wrapper.send(env, name, args, block);
     }
 
     return object()->send(env, name, args, block);
